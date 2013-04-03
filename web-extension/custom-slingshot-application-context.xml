@@ -1,0 +1,30 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--FILE: tomcat/shared/classes/web-extension/custom-slingshot-application-context.xml-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:hz="http://www.hazelcast.com/schema/config"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+                http://www.hazelcast.com/schema/config
+                http://www.hazelcast.com/schema/config/hazelcast-spring.xsd">
+   <hz:topic id="topic" instance-ref="webframework.cluster.slingshot" name="slingshot-topic"/>
+   <hz:hazelcast id="webframework.cluster.slingshot">
+      <hz:config>
+         <hz:group name="@@HZ_CLUSTER_NAME@@Share" password="@@HZ_CLUSTER_PASSWORD@@"/>
+         <hz:network port="5802" port-auto-increment="true">
+            <hz:join>
+               <hz:multicast enabled="false"
+                     multicast-group="224.2.2.5"
+                     multicast-port="54327"/>
+               <hz:tcp-ip enabled="false">
+                  <hz:members></hz:members>
+               </hz:tcp-ip>
+               <hz:aws enabled="true" access-key="@@AWS_ACCESS_KEY@@" secret-key="@@AWS_SECRET_KEY@@" region="@@AWS_REGION@@" security-group-name="@@AWS_SECURITY_GROUP@@"/>
+            </hz:join>
+            <hz:interfaces enabled="false">
+               <hz:interface>192.168.1.*</hz:interface>
+            </hz:interfaces>
+         </hz:network>
+      </hz:config>
+   </hz:hazelcast>
+</beans>
