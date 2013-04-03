@@ -478,14 +478,14 @@
 				  "echo system.content.caching.maxUsageMB=10240 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
 				  "echo system.content.caching.maxFileSizeMB=0 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
           "echo ftp.enabled=true >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
-          "echo cifs.enabled=false>> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n"
+          "echo cifs.enabled=false >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n"
                   ]]
               },
                "mode"   : "000700",
                               "owner"  : "ec2-user",
                               "group"  : "ec2-user"
             },
-              "/home/ec2-user/alfresco-enterprise-4.1.1-installer-linux-x64.bin" : { "source" : "http://eu.dl.alfresco.com/release/enterprise/4.1/build-00097/alfresco-enterprise-4.1.3-installer-linux-x64.bin",  "mode"   : "000700",
+              "/home/ec2-user/alfresco-enterprise-4.1.3-installer-linux-x64.bin" : { "source" : "http://eu.dl.alfresco.com/release/enterprise/4.1/build-00097/alfresco-enterprise-4.1.3-installer-linux-x64.bin",  "mode"   : "000700",
                               "owner"  : "ec2-user",
                               "group"  : "ec2-user" },
               "/home/ec2-user/alfresco-s3-connector-1.0.0-5.amp" : { "source" : "http://eu.dl.alfresco.com/release/enterprise/4.1/build-00097/alfresco-s3-connector-1.0.0-5.zip",  "mode"   : "000700",
