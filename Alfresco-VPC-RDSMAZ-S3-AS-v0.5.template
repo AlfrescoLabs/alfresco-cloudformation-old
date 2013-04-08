@@ -118,30 +118,8 @@
       "Alfresco2"	: {"CIDR"  : "10.0.2.0/28"  },
       "RDS1"		: {"CIDR"  : "10.0.20.0/24" },
       "RDS2"		: {"CIDR"  : "10.0.30.0/24" }
-    },
-     "Regions" : {
-      "us-east-1"			  	   	: { "Region"  : "USE1"  },
-      "us-west-1"					: { "Region"  : "USW1" },
-      "eu-west-1"					: { "Region"  : "USW2" },
-      "us-west-2"					: { "Region"  : "EUW1" },
-      "ap-southeast-1"				: { "Region"  : "APS1"  },
-      "ap-southeast-2"				: { "Region"  : "APS2"  },
-      "ap-northeast-1"				: { "Region"  : "APN1" },
-      "sa-east-1"					: { "Region"  : "SA1" }
-    
-    },
-    
-    "USE1" : {
-      "m1.small"  	  		: { "Price"  : "0.06"  },
-      "m1.medium"			: { "Price"  : "0.12" },
-      "m1.large"			: { "Price"  : "0.24" },
-      "c1.medium"			: { "Price"  : "0.145" },
-      "m1.xlarge"			: { "Price"  : "0.48"  },
-      "m2.xlarge"			: { "Price"  : "0.41"  },
-      "m2.2xlarge"			: { "Price"  : "0.82" },
-      "m2.4xlarge"			: { "Price"  : "1.64" }
-    
     }
+  
   },  
    
  "Outputs": {
@@ -229,9 +207,8 @@
       "Properties" : {
         "Tags" : 
         [ 
-          {"Key" : "Name" ,"Value" : "NAT Instance" },
-          {"Key" : "@Product", "Value" : "Alfresco Enterprise" },
-          {"Key" : "@Price", "Value" : { "Fn::FindInMap" : [ {"Fn::FindInMap" : ["Regions", {"Ref" : "AWS::Region"  }, "Region"]  }  ,{"Ref" : "NATInstanceType" }, "Price" ]}} 
+          {"Key" : "Name" ,"Value" : "NAT Instance" }
+
         ],  
         "InstanceType" : { "Ref" : "NATInstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
@@ -247,9 +224,8 @@
         "Tags" : 
         [ 
            
-          {"Key" : "Name" ,"Value" : "NAT Instance" },
-          {"Key" : "@Product", "Value" : "Alfresco Enterprise" },
-          {"Key" : "@Price", "Value" : { "Fn::FindInMap" : [ {"Fn::FindInMap" : ["Regions", {"Ref" : "AWS::Region"  }, "Region"]  }  , {"Ref" : "NATInstanceType" }, "Price" ]}} 
+          {"Key" : "Name" ,"Value" : "NAT Instance" }
+ 
         ],  
         "InstanceType" : { "Ref" : "NATInstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
@@ -335,12 +311,21 @@
          }
        ],  
       "AppCookieStickinessPolicy" : [ { "CookieName" : "jsessionid", "PolicyName" : "AlfrescoCluster" }],
-      "Listeners" : [ {
+      "Listeners" : 
+      [ 
+        {
          "LoadBalancerPort" : "80",
          "InstancePort" :  "8080" ,
          "Protocol" : "HTTP",
          "PolicyNames" : [ "AlfrescoCluster"] 
-         }],
+         },
+         {
+         "LoadBalancerPort" : "8080",
+         "InstancePort" :  "7070" ,
+         "Protocol" : "HTTP",
+         "PolicyNames" : [ "AlfrescoCluster"] 
+         }
+      ],
 
       
       "HealthCheck" : {
@@ -360,13 +345,16 @@
                 "VpcId" : { "Ref" : "VPC" },
         "SecurityGroupIngress" : 
                 [ 
-                    { "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"}
+                    { "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"},
+                    { "IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : "0.0.0.0/0"}
                   
                 ],
         "SecurityGroupEgress" : 
                 [
                     {"IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco1", "CIDR" ]} },
-                    {"IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} }
+                    {"IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} },
+                    {"IpProtocol" : "tcp", "FromPort" : "7070", "ToPort" : "7070", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco1", "CIDR" ]} },
+                    {"IpProtocol" : "tcp", "FromPort" : "7070", "ToPort" : "7070", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} }
                 ]
               }
         
