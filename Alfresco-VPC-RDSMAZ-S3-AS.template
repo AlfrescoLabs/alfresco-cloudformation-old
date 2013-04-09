@@ -6,7 +6,7 @@
         "KeyName": 
         {
             "Type": "String",
-            "Default": "lsala-us-west",
+            "Default": "hollandr-pub",
             "Description": "Name of an existing EC2 KeyPair, all instances will launch with this KeyPair"
         },
        "SSHFrom" :
@@ -23,8 +23,8 @@
         {
             "Type":"String",
             "Description" : "First availabiltiy zone to deploy into",
-            "Default": "us-west-1b",
-            "AllowedValues" : ["eu-west-1a","eu-west-1b","eu-west-1c","us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-west-1a","us-west-1b","us-west-1c","ap-southeast-1a","ap-southeast-1b","ap-northeast-1a","ap-northeast-1b","ap-northeast-1c","us-west-2a","us-west-2b","us-west-2c","sa-east-1a","sa-east-1b, ap2-southeast-1b, ap2-southeast-1a"],
+            "Default": "us-east-1a",
+            "AllowedValues" : ["eu-west-1a","eu-west-1b","eu-west-1c","us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-west-1a","us-west-1b","us-west-1c", "ap-southeast-1a","ap-southeast-1b","ap-northeast-1a","ap-northeast-1b","ap-northeast-1c","us-west-2a","us-west-2b","us-west-2c","sa-east-1a","sa-east-1b, ap2-southeast-1b, ap2-southeast-1a"],
             "ConstraintDescription" : "Must be a valid EC2 Availabilty zone"            
         },
         
@@ -32,8 +32,8 @@
         {
             "Type":"String",
             "Description" : "Second availabiltiy zone to deploy into",
-            "Default": "us-west-1c",
-            "AllowedValues" : ["eu-west-1a","eu-west-1b","eu-west-1c","us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-west-1a","us-west-1b","us-west-1c","us-west-1a","us-west-1b","ap-southeast-1a","ap-southeast-1b","ap-northeast-1a","ap-northeast-1b","ap-northeast-1c","us-west-2a","us-west-2b","us-west-2c","sa-east-1a","sa-east-1b, ap2-southeast-1b, ap2-southeast-1a"],
+            "Default": "us-east-1b",
+            "AllowedValues" : ["eu-west-1a","eu-west-1b","eu-west-1c","us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-west-1a","us-west-1b","us-west-1c","ap-southeast-1a","ap-southeast-1b","ap-northeast-1a","ap-northeast-1b","ap-northeast-1c","us-west-2a","us-west-2b","us-west-2c","sa-east-1a","sa-east-1b, ap2-southeast-1b, ap2-southeast-1a"],
             "ConstraintDescription" : "Must be a valid EC2 Availabilty zone"            
         },
        
@@ -47,45 +47,41 @@
         },
         "AlfrescoInstanceType": 
         {
-            "Default": "c1.medium",
+            "Default": "m1.xlarge",
             "Description" : "Type of EC2 instance for the Alfresco instances",
             "Type": "String",
-            "AllowedValues" : [ "m1.small", "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge","c1.medium"  ],
+            "AllowedValues" : [ "m1.small", "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge", "c1.medium", "c1.xlarge"  ],
             "ConstraintDescription" : "must contain valid instance type"
         },
         "NATInstanceType": 
         {
-            "Default": "c1.medium",
+            "Default": "m1.small",
             "Description" : "Type of EC2 instance for the NAT instances",
             "Type": "String",
-            "AllowedValues" : [ "m1.small", "m1.medium", "m1.large", "m1.xlarge", "m2.xlarge", "m2.2xlarge", "m2.4xlarge","c1.medium" ],
+            "AllowedValues" : [ "m1.small", "m1.medium", "m1.large", "m1.xlarge" ],
             "ConstraintDescription" : "must contain valid instance type"
         },
         "RDSUsername" :
         {
           "Type": "String",
-          "Default": "admin",
           "Description": "Username for the RDS database"
         },
         "RDSPassword" :
         {
           "Type": "String",
-          "Default": "admin",
           "Description":"Password for the RDS database",
            "NoEcho" :  "TRUE"  
         },
          "AlfrescoPassword" :
         {
           "Type": "String",
-          "Default": "admin",
           "Description":"Password for the Alfresco admin user",
           "NoEcho" : "TRUE" 
         },
         "S3Bucket": 
         {
           "Description" : "Name of the S3 bucket that Alfresco should use to store data. Note: This bucket must already exist",
-          "Type" : "String",
-          "Default": "lsala-cf-development"
+          "Type" : "String"
         }
 
     },
@@ -105,7 +101,7 @@
     "ALINUXAMI" : {
       "us-east-1"      : { "AMI" : "ami-54cf5c3d" },
       "us-west-2"      : { "AMI" : "ami-8e27adbe" },
-      "us-west-1"      : { "AMI" : "ami-66d1fc23" },
+      "us-west-1"      : { "AMI" : "ami-b63210f3" },
       "eu-west-1"      : { "AMI" : "ami-3c5f5748" },
       "ap-southeast-1" : { "AMI" : "ami-ba7538e8" },
       "ap-southeast-2" : { "AMI" : "ami-b6df4e8c" },
@@ -123,17 +119,12 @@
       "RDS1"		: {"CIDR"  : "10.0.20.0/24" },
       "RDS2"		: {"CIDR"  : "10.0.30.0/24" }
     }
+  
   },  
-
-      
-    
-    
-    
-    
-    
-    "Outputs": {
+   
+ "Outputs": {
         "AlfrescoServerOutput": {
-            "Description": "URL to the Alfresco server",
+            "Description": "URL to the ELB serving the Alfresco cluster",
             "Value": {"Fn::Join" : [ "", ["http://", { "Fn::GetAtt" : [ "ElasticLoadBalancer" , "DNSName"] } ,"/alfresco"] ] }
         }
     }, 
@@ -193,6 +184,7 @@
             "Tags" : [
               {"Key" : "Application", "Value" : "NAT" },
               {"Key" : "Network", "Value" : "Public" }
+              
             ],
             "AvailabilityZone" : { "Ref" : "AZ1"}
           }
@@ -213,7 +205,11 @@
     "NATInstance" : {
       "Type" : "AWS::EC2::Instance", 
       "Properties" : {
-        "Tags" : [ {"Key" : "Name" ,"Value" : "NAT Instance" } ],  
+        "Tags" : 
+        [ 
+          {"Key" : "Name" ,"Value" : "NAT Instance" }
+
+        ],  
         "InstanceType" : { "Ref" : "NATInstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "NetworkInterfaces" : [ { "NetworkInterfaceId" : {"Ref" : "NATInterface"}, "DeviceIndex" : "0" } ],
@@ -225,7 +221,12 @@
      "NATInstance2" : {
       "Type" : "AWS::EC2::Instance", 
       "Properties" : {
-        "Tags" : [ {"Key" : "Name" ,"Value" : "NAT Instance" }],  
+        "Tags" : 
+        [ 
+           
+          {"Key" : "Name" ,"Value" : "NAT Instance" }
+ 
+        ],  
         "InstanceType" : { "Ref" : "NATInstanceType" },
         "KeyName" : { "Ref" : "KeyName" },
         "NetworkInterfaces" : [ { "NetworkInterfaceId" : {"Ref" : "NATInterface2"}, "DeviceIndex" : "0" } ],
@@ -292,8 +293,8 @@
         "GroupDescription" : "Enable internal access to the NAT device",
         "VpcId" : { "Ref" : "VPC" },
          "SecurityGroupIngress" : [
-           { "IpProtocol" : "tcp", "FromPort" : "80",  "ToPort" : "80",  "CidrIp" : "0.0.0.0/0" } ,
-           { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : "0.0.0.0/0" } ,
+           { "IpProtocol" : "tcp", "FromPort" : "80",  "ToPort" : "80",  "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ]} } ,
+           { "IpProtocol" : "tcp", "FromPort" : "443", "ToPort" : "443", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "VPC", "CIDR" ]} } ,
            { "IpProtocol" : "tcp", "FromPort" : "22",  "ToPort" : "22",  "CidrIp" : { "Ref" : "SSHFrom" }} ],
         "SecurityGroupEgress" : [
            { "IpProtocol" : "tcp", "FromPort" : "80",  "ToPort" : "80",  "CidrIp" : "0.0.0.0/0" } ,
@@ -310,12 +311,21 @@
          }
        ],  
       "AppCookieStickinessPolicy" : [ { "CookieName" : "jsessionid", "PolicyName" : "AlfrescoCluster" }],
-      "Listeners" : [ {
+      "Listeners" : 
+      [ 
+        {
          "LoadBalancerPort" : "80",
          "InstancePort" :  "8080" ,
          "Protocol" : "HTTP",
          "PolicyNames" : [ "AlfrescoCluster"] 
-         }],
+         },
+         {
+         "LoadBalancerPort" : "8080",
+         "InstancePort" :  "7070" ,
+         "Protocol" : "HTTP",
+         "PolicyNames" : [ "AlfrescoCluster"] 
+         }
+      ],
 
       
       "HealthCheck" : {
@@ -335,13 +345,16 @@
                 "VpcId" : { "Ref" : "VPC" },
         "SecurityGroupIngress" : 
                 [ 
-                    { "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"}
+                    { "IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"},
+                    { "IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : "0.0.0.0/0"}
                   
                 ],
         "SecurityGroupEgress" : 
                 [
                     {"IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco1", "CIDR" ]} },
-                    {"IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} }
+                    {"IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} },
+                    {"IpProtocol" : "tcp", "FromPort" : "7070", "ToPort" : "7070", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco1", "CIDR" ]} },
+                    {"IpProtocol" : "tcp", "FromPort" : "7070", "ToPort" : "7070", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} }
                 ]
               }
         
@@ -368,13 +381,15 @@
      "AlfrescoASGroup" : {
       "Type" : "AWS::AutoScaling::AutoScalingGroup",
       "Properties" : {
-        "Tags" : [ { "Key" : "Name", "Value" : "AlfrescoServer", "PropagateAtLaunch" : true  
-          }
-        ],  
+        "Tags" : 
+        	[ 
+          		{ "Key" : "Name", "Value" : "AlfrescoServer", "PropagateAtLaunch" : true }
+				
+        	],  
         "AvailabilityZones" : [  { "Ref" : "AZ1"}, {"Ref" : "AZ2"} ] ,
         "VPCZoneIdentifier" : [  { "Ref" : "AlfrescoSubnet" } , { "Ref" : "AlfrescoSubnet2" } ] ,  
         "HealthCheckGracePeriod" : "2000",  
-        "HealthCheckType" : "EC2",  
+        "HealthCheckType" : "ELB",  
         "LaunchConfigurationName" : { "Ref" : "AlfrescoLC" },
         "MinSize" : "2",
         "MaxSize" : "6",
@@ -388,16 +403,42 @@
       "Properties" : {
         
         "KeyName" : { "Ref" : "KeyName" },
-        "ImageId" : "ami-66d1fc23", 
+        "ImageId" : { "Fn::FindInMap" : [ "ALINUXAMI", { "Ref" : "AWS::Region" }, "AMI" ]}, 
+        "IamInstanceProfile" : { "Ref" : "AlfrescoRoleProfile"  },  
         "BlockDeviceMappings" : [ { "DeviceName" : "/dev/sdh", "VirtualName" : "ephemeral0" }],  
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
            "#!/bin/bash -v\n",
+            " yum update -y aws-cfn-bootstrap \n",  
             "/opt/aws/bin/cfn-init -s ", { "Ref" : "AWS::StackName" }, 
              " -r AlfrescoLC", 
-            " --access-key ", { "Ref" : "CFNKeys" },
-            " --secret-key ", {"Fn::GetAtt": ["CFNKeys", "SecretAccessKey"]},
-            " --region ", { "Ref" : "AWS::Region" }, "\n",
+             " --role=", { "Ref" : "AlfrescoRole"  }, 
+             " --region ", { "Ref" : "AWS::Region" }, "\n",
             "/home/ec2-user/installAlf.sh\n",
+            "mkdir /opt/alfresco/tomcat/webapps/WEB-INF\n",
+            "mkdir /opt/alfresco/tomcat/webapps/WEB-INF/lib\n",  
+            "mv /home/ec2-user/hazelcast-cloud-1.9.4.6.jar /opt/alfresco/tomcat/webapps/WEB-INF/lib\n",
+            "cd /opt/alfresco/tomcat/webapps/\n", 
+            "zip -u alfresco.war WEB-INF/lib/hazelcast-cloud-1.9.4.6.jar\n",   
+            "zip -u share.war WEB-INF/lib/hazelcast-cloud-1.9.4.6.jar\n",  
+            "cd /home/ec2-user\n",  
+            "sed -i 's/@@HZ_CLUSTER_NAME@@Share/AlfrescoS3Cluster/g' custom-slingshot-application-context.xml\n", 
+            "sed -i 's/@@HZ_CLUSTER_PASSWORD@@/AlfrescoS3Cluster/g' custom-slingshot-application-context.xml\n", 
+            "sed -i 's/@@AWS_ACCESS_KEY@@/", { "Ref" : "CFNKeys"}, "/g' custom-slingshot-application-context.xml\n", 
+            "sed -i 's/@@AWS_SECRET_KEY@@/", {"Fn::GetAtt": ["CFNKeys", "SecretAccessKey"]}, "/g' custom-slingshot-application-context.xml\n", 
+            "sed -i 's/@@AWS_REGION@@/", {"Ref" : "AWS::Region"},"/g' custom-slingshot-application-context.xml\n", 
+            "sed -i 's/@@AWS_SECURITY_GROUP@@/",{ "Ref" : "AlfrescoSecurityGroup"} , "/g' custom-slingshot-application-context.xml\n", 
+            
+            "mv /home/ec2-user/hazelcast-ec2.xml /opt/alfresco/tomcat/shared/classes/alfresco/extension\n",
+            "mv /home/ec2-user/cache-context.xmll /opt/alfresco/tomcat/shared/classes/alfresco/extension\n",
+            "mv /home/ec2-user/ehcache-custom.xml /opt/alfresco/tomcat/shared/classes/alfresco/extension\n",
+            "mv /home/ec2-user/custom-slingshot-application-context.xml /opt/alfresco/tomcat/shared/classes/alfresco/web-extension\n",
+
+            "wget https://s3.amazonaws.com/publisher-bucket/bin/aws-publisher_install.sh\n", 
+            "chmod u+x /home/ec2-user/aws-publisher_install.sh\n",
+            "/home/ec2-user/aws-publisher_install.sh\n",
+            "echo product.code   AlfrescoEnterprise > /etc/aws-publisher/cw.conf\n",   
+            "service aws-publisher stop \n",
+            "service aws-publisher start \n",    
             "service alfresco start\n",
             "sleep 200\n",
              "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\" : \"SUCCESS\",",
@@ -417,11 +458,7 @@
           "config" : {
             "packages" : 
               {
-               "yum" : 
-               {
-                  "aws-cfn-bootstrap" : []
-                }
-                   
+               
               },
 
 
@@ -429,8 +466,8 @@
               "/home/ec2-user/installAlf.sh" : 
                 {
                 "content" : { "Fn::Join" : ["", [
-                  "echo enable-components=alfrescosharepoint,javaalfresco,openofficecomponent >> /home/ec2-user/option_file \n",
-                  "echo disable-components=postgres,alfrescowcmqs >> /home/ec2-user/option_file \n",
+                  "echo enable-components=alfrescosharepoint,javaalfresco,alfrescowcmqs,openofficecomponent >> /home/ec2-user/option_file \n",
+                  "echo disable-components=postgres >> /home/ec2-user/option_file \n",
                   "echo prefix=/opt/alfresco >> /home/ec2-user/option_file \n",
                   "echo alfresco_admin_password=", {"Ref" : "AlfrescoPassword"}, " >> /home/ec2-user/option_file\n",
                   "echo jdbc_driver=org.gjt.mm.mysql.Driver >> /home/ec2-user/option_file\n",
@@ -444,13 +481,14 @@
                   "cur=$(hostname  | sed 's/-/./g' | cut -c4-18)\n",
                   "cur1=$(hostname)\n",
                   "echo \"$cur $cur1\" >> /etc/hosts\n",
-                   "mkdir /mnt/alfresco\n",
+                  "mkdir /mnt/alfresco\n",
                   "mkdir /mnt/alfresco/cache\n",   
                   "chown -R ec2-user:ec2-user /mnt/alfresco\n",
                   "mount /dev/sdh /mnt/alfresco/cache\n",
 				  
-
-                  "/home/ec2-user/alfresco-enterprise-4.1.1-installer-linux-x64.bin --optionfile /home/ec2-user/option_file \n",
+				  "cd /home/ec2-user\n",
+      			  "unzip /home/ec2-user/alfresco-s3-connector-1.0.0-5.zip\n",  
+                  "/home/ec2-user/alfresco-enterprise-4.1.3-installer-linux-x64.bin --optionfile /home/ec2-user/option_file \n",
                   "cp /home/ec2-user/alfresco-s3-connector-1.0.0-5.amp /opt/alfresco/amps \n",
                   "cp /home/ec2-user/mysql-connector-java-5.1.22-bin.jar /opt/alfresco/tomcat/lib \n",
                   "sed -i 's/read RESP/ /g' /opt/alfresco/bin/apply_amps.sh \n",
@@ -477,8 +515,25 @@
 				  "echo system.content.caching.minFileAgeInMillis=2000 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
 				  "echo system.content.caching.maxUsageMB=10240 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
 				  "echo system.content.caching.maxFileSizeMB=0 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
-          "echo ftp.enabled=true >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
-          "echo cifs.enabled=false >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n"
+      			  "echo alfresco.hazelcast.configLocation=classpath:alfresco/extension/hazelcast-ec2.xml >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo alfresco.hazelcast.password=AlfrescoS3Cluster >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo alfresco.hazelcast.protocol=ec2 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo alfresco.hazelcast.ec2.accesskey=", { "Ref" : "CFNKeys"}, "  >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo alfresco.hazelcast.ec2.secretkey=", {"Fn::GetAtt": ["CFNKeys", "SecretAccessKey"]}, "  >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo alfresco.hazelcast.ec2.region=", {"Ref" : "AWS::Region"}, " >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo alfresco.hazelcast.ec2.securitygroup=",{ "Ref" : "AlfrescoSecurityGroup"} , " >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo alfresco.hazelcast.ec2.tagkey=Name >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+      			  "echo alfresco.hazelcast.ec2.tagvalue=AlfrescoServer >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+      			  "echo alfresco.host=", { "Fn::GetAtt" : [ "ElasticLoadBalancer" , "DNSName"] }, " >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+ 	              "echo alfresco.port=80 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",  	 
+				  "echo alfresco.protocol=http >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo share.host=", { "Fn::GetAtt" : [ "ElasticLoadBalancer" , "DNSName"] }, "  >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo share.port=80 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo share.protocol=http >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo vti.server.external.host=", { "Fn::GetAtt" : [ "ElasticLoadBalancer" , "DNSName"] }, "  >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo vti.server.external.port=8080 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
+				  "echo vti.server.external.protocol=http >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n"
+					
                   ]]
               },
                "mode"   : "000700",
@@ -488,15 +543,27 @@
               "/home/ec2-user/alfresco-enterprise-4.1.3-installer-linux-x64.bin" : { "source" : "http://eu.dl.alfresco.com/release/enterprise/4.1/build-00097/alfresco-enterprise-4.1.3-installer-linux-x64.bin",  "mode"   : "000700",
                               "owner"  : "ec2-user",
                               "group"  : "ec2-user" },
-              "/home/ec2-user/alfresco-s3-connector-1.0.0-5.amp" : { "source" : "http://eu.dl.alfresco.com/release/enterprise/4.1/build-00097/alfresco-s3-connector-1.0.0-5.zip",  "mode"   : "000700",
+              "/home/ec2-user/alfresco-s3-connector-1.0.0-5.zip" : { "source" : "http://eu.dl.alfresco.com/release/enterprise/4.1/build-00097/alfresco-s3-connector-1.0.0-5.zip",  "mode"   : "000700",
                               "owner"  : "ec2-user",
                               "group"  : "ec2-user"},
               "/home/ec2-user/mysql-connector-java-5.1.22-bin.jar" : { "source" : "https://s3.amazonaws.com/alfrescoInstaller/mysql-connector-java-5.1.22-bin.jar",  "mode"   : "000700",
                               "owner"  : "ec2-user",
                               "group"  : "ec2-user"},
-              "/home/ec2-user/alfresco-hazelcast.zip" : { "source" : "https://s3.amazonaws.com/alfrescoInstaller/alfresco-s3-connector-1.0.0-5.amp",  "mode"   : "000700",
-              "owner"  : "ec2-user",
-              "group"  : "ec2-user"},
+              "/home/ec2-user/hazelcast-cloud-1.9.4.6.jar" : { "source" : "https://s3.amazonaws.com/alfrescoInstaller/hazelcast-cloud-1.9.4.6.jar",  "mode"   : "000700",
+                              "owner"  : "ec2-user",
+                              "group"  : "ec2-user"},
+             "/home/ec2-user/cache-context.xml" : { "source" : "https://s3.amazonaws.com/alfrescoInstaller/cache-context.xml",  "mode"   : "000700",
+                              "owner"  : "ec2-user",
+                              "group"  : "ec2-user"},
+             "/home/ec2-user/custom-slingshot-application-context.xml" : { "source" : "https://s3.amazonaws.com/alfrescoInstaller/custom-slingshot-application-context.xml",  "mode"   : "000700",
+                              "owner"  : "ec2-user",
+                              "group"  : "ec2-user"},  
+             "/home/ec2-user/ehcache-custom.xml" : { "source" : "https://s3.amazonaws.com/alfrescoInstaller/ehcache-custom.xml",  "mode"   : "000700",
+                              "owner"  : "ec2-user",
+                              "group"  : "ec2-user"},
+             "/home/ec2-user/hazelcast-ec2.xml" : { "source" : "https://s3.amazonaws.com/alfrescoInstaller/hazelcast-ec2.xml",  "mode"   : "000700",
+                              "owner"  : "ec2-user",
+                              "group"  : "ec2-user"}  
 
           }
         }
@@ -743,7 +810,64 @@
         },
      
        
-
+	   "AlfrescoRole" : {
+      		"Type" : "AWS::IAM::Role",
+        	"Properties": {
+            	 "AssumeRolePolicyDocument": {
+		               "Statement": [ {
+		                  "Effect": "Allow",
+		                  "Principal": {
+		                     "Service": [ "ec2.amazonaws.com" ] },
+		                  	 "Action": [ "sts:AssumeRole" ]
+		               	} ]
+		            },
+           
+           		 "Path": "/",
+            	 "Policies": [ {
+               		"PolicyName": "AlfrescoCluster",
+               		"PolicyDocument": {
+	               		"Statement": [{
+			                  "Effect"   : "Allow",
+			                  "Action"   : "cloudformation:DescribeStackResource",
+			                  "Resource" : "*"
+			                },
+			                {
+			                  "Effect"   : "Allow",
+			                  "Action"   : "EC2:Describe*",
+			                  "Resource" : "*"
+			                },
+                            {
+                			  "Effect"   : "Allow",
+           			          "Action"   : "cloudwatch:PutMetricData",
+                  			  "Resource" : "*"
+                			},
+			                {
+			                  "Effect" : "Allow",
+			                  "Action" : [ "s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket", "s3:Get*", "s3:CreateBucket", "s3:List*"],
+			                  "Resource" : { "Fn::Join" : [ "", ["arn:aws:s3:::",  {"Ref" : "S3Bucket"}, "/*" ] ]}
+			
+			
+			                },
+			                {
+			                  "Effect" : "Allow",
+			                  "Action" : [ "s3:List*"],
+			                  "Resource" : "*"
+			                }
+			                ]
+			              }
+                 }
+	                
+                 
+                  ]} 	
+      },  
+      
+      "AlfrescoRoleProfile" : {
+      		"Type": "AWS::IAM::InstanceProfile",
+		         "Properties": {
+		            "Path": "/",
+		            "Roles": [ { "Ref": "AlfrescoRole"} ]
+		         }  
+      },  
     
        "AlfrescoUser" : {
           "Type" : "AWS::IAM::User",
@@ -759,6 +883,11 @@
                 {
                   "Effect"   : "Allow",
                   "Action"   : "EC2:Describe*",
+                  "Resource" : "*"
+                },
+                {
+                  "Effect"   : "Allow",
+                  "Action"   : "cloudwatch:PutMetricData",
                   "Resource" : "*"
                 },
                 {
@@ -796,12 +925,13 @@
                 "SecurityGroupIngress" : 
                         [ 
                             { "IpProtocol" : "tcp", "FromPort" : "8080", "ToPort" : "8080", "SourceSecurityGroupId" : { "Ref" : "ELBSecurityGroup" }},
+                            { "IpProtocol" : "tcp", "FromPort" : "7070", "ToPort" : "7070", "SourceSecurityGroupId" : { "Ref" : "ELBSecurityGroup" }},
                           	{ "IpProtocol" : "tcp", "FromPort" : "7800", "ToPort" : "7800", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco1", "CIDR" ]} },
-                           { "IpProtocol" : "tcp", "FromPort" : "7800", "ToPort" : "7800", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} },
+                            { "IpProtocol" : "tcp", "FromPort" : "7800", "ToPort" : "7800", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} },
                             { "IpProtocol" : "tcp", "FromPort" : "5800", "ToPort" : "5810", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco1", "CIDR" ]} },
-                           { "IpProtocol" : "tcp", "FromPort" : "5800", "ToPort" : "5810", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} },
+                            { "IpProtocol" : "tcp", "FromPort" : "5800", "ToPort" : "5810", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} },
                             { "IpProtocol" : "tcp", "FromPort" : "5700", "ToPort" : "5710", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco1", "CIDR" ]} },
-                           { "IpProtocol" : "tcp", "FromPort" : "5700", "ToPort" : "5710", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} },                           
+                            { "IpProtocol" : "tcp", "FromPort" : "5700", "ToPort" : "5710", "CidrIp" : { "Fn::FindInMap" : [ "SubnetConfig", "Alfresco2", "CIDR" ]} },  
                             { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : {"Fn::Join" : ["",[{"Fn::GetAtt" : ["NATInstance2", "PrivateIp"]},"/32"]]} }, 
                      	    { "IpProtocol" : "tcp", "FromPort" : "22", "ToPort" : "22", "CidrIp" : {"Fn::Join" : ["", [{"Fn::GetAtt" : ["NATInstance", "PrivateIp"]},"/32"]]} } 
                              
