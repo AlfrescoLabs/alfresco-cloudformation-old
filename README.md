@@ -26,7 +26,8 @@ Basic Usage
 	* Ensure you set the correct EC2 key.
 * Click *Continue* and finish the wizard.
 
-=Tips=
+Tips
+----
 * The instances will take 10-15 minutes to start.
 * Use the *Events* tab to review status and any errors.
 * Once the environment starts, use the *Output* tab to get the URL of the load-balancer.
