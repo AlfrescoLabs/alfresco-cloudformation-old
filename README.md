@@ -1,6 +1,8 @@
 Alfresco CloudFormation Template
 ================================
 
+*Disclaimer:* This CloudFormation template is still in early development and should be considered for illustrative/educational purposes only. No warranty is expressed or implied. Improvements and any other contributions are encouraged and appreciated.
+
 Overview
 --------
 
@@ -32,3 +34,16 @@ Tips
 * Use the *Events* tab to review status and any errors.
 * Once the environment starts, use the *Output* tab to get the URL of the load-balancer.
 * If stack deletion does not complete and the *Events* show an error related to VPC, login to the VPC console and delete the corresponding VPC; then delete the stack again.
+
+License
+-------
+   Copyright 2013 Alfresco Software, Ltd.
+   Copyright 2013 Amazon Web Services, Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+This work may reference software licensed under other open source licenses, please refer to these respective works for more information on license terms.
