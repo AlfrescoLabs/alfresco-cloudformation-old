@@ -86,6 +86,18 @@
 
     },
    "Mappings" : {
+    "ALINUXAMI" : {
+      "us-east-1"      : { "AMI" : "ami-3275ee5b" },
+      "us-west-2"      : { "AMI" : "ami-ecbe2adc" },
+      "us-west-1"      : { "AMI" : "ami-66d1fc23" },
+      "eu-west-1"      : { "AMI" : "ami-44939930" },
+      "ap-southeast-1" : { "AMI" : "ami-aa9ed2f8" },
+      "ap-southeast-2" : { "AMI" : "ami-363eaf0c" },
+      "ap-northeast-1" : { "AMI" : "ami-173fbf16" },
+      "sa-east-1"      : { "AMI" : "ami-dd6bb0c0" }
+    },
+
+
     "AWSNATAMI" : {
       "us-east-1"      : { "AMI" : "ami-c6699baf" },
       "us-west-2"      : { "AMI" : "ami-52ff7262" },
@@ -95,18 +107,6 @@
       "ap-southeast-2" : { "AMI" : "ami-ab990e91" },
       "ap-northeast-1" : { "AMI" : "ami-14d86d15" },
       "sa-east-1"      : { "AMI" : "ami-0439e619" }
-    },
-
-
-    "ALINUXAMI" : {
-      "us-east-1"      : { "AMI" : "ami-54cf5c3d" },
-      "us-west-2"      : { "AMI" : "ami-8e27adbe" },
-      "us-west-1"      : { "AMI" : "ami-b63210f3" },
-      "eu-west-1"      : { "AMI" : "ami-3c5f5748" },
-      "ap-southeast-1" : { "AMI" : "ami-ba7538e8" },
-      "ap-southeast-2" : { "AMI" : "ami-b6df4e8c" },
-      "ap-northeast-1" : { "AMI" : "ami-5d7dfa5c" },
-      "sa-east-1"      : { "AMI" : "ami-89c81394" }
       
     },
 
@@ -366,7 +366,7 @@
    "WaitForAlfrescoInstall" : 
       {
             "Type" : "AWS::CloudFormation::WaitCondition",
-            "DependsOn" : "AlfrescoASGroup",
+            "DependsOn" : "AlfrescoInstance",
             "Properties" : {
               "Handle" : {"Ref" : "WaitForAlfrescoInstallWaitHandle"},
               "Timeout" : "1700"
@@ -378,40 +378,55 @@
           "Properties" : { }
         },
     
-     "AlfrescoASGroup" : {
-      "Type" : "AWS::AutoScaling::AutoScalingGroup",
-      "Properties" : {
-        "Tags" : 
-        	[ 
-          		{ "Key" : "Name", "Value" : "AlfrescoServer", "PropagateAtLaunch" : true }
-				
-        	],  
-        "AvailabilityZones" : [  { "Ref" : "AZ1"}, {"Ref" : "AZ2"} ] ,
-        "VPCZoneIdentifier" : [  { "Ref" : "AlfrescoSubnet" } , { "Ref" : "AlfrescoSubnet2" } ] ,  
-        "HealthCheckGracePeriod" : "2000",  
-        "HealthCheckType" : "ELB",  
-        "LaunchConfigurationName" : { "Ref" : "AlfrescoLC" },
-        "MinSize" : "2",
-        "MaxSize" : "6",
-        "LoadBalancerNames" : [ { "Ref" : "ElasticLoadBalancer" } ]
-        
-      }
-    },
+     "AlfrescoInterface" : 
+      {
+          "Type" : "AWS::EC2::NetworkInterface",
+          "Properties" : {
+            "SubnetId" : { "Ref" : "AlfrescoSubnet" },
+            "Description" :"External interface for Alfresco server",
+            "GroupSet" : [ {"Ref" : "AlfrescoSecurityGroup"} ],
+            "SourceDestCheck" : "true",
+            "Tags" : [ {"Key" : "Network", "Value" : "Private"}]
+          }
+        },
 
-    "AlfrescoLC" : {
-      "Type" : "AWS::AutoScaling::LaunchConfiguration", 
+    "AlfrescoInstance" : {
+      "Type" : "AWS::EC2::Instance",
       "Properties" : {
-        
+        "NetworkInterfaces" : [ { "NetworkInterfaceId" : {"Ref" : "AlfrescoInterface"}, "DeviceIndex" : "0" } ],
         "KeyName" : { "Ref" : "KeyName" },
         "ImageId" : { "Fn::FindInMap" : [ "ALINUXAMI", { "Ref" : "AWS::Region" }, "AMI" ]}, 
-        "IamInstanceProfile" : { "Ref" : "AlfrescoRoleProfile"  },  
+        "IamInstanceProfile" : { "Ref" : "SetupRoleProfile"  },  
         "BlockDeviceMappings" : [ { "DeviceName" : "/dev/sdh", "VirtualName" : "ephemeral0" }],  
         "UserData" : { "Fn::Base64" : { "Fn::Join" : ["", [
-           "#!/bin/bash -v\n",
-            " yum update -y aws-cfn-bootstrap \n",  
+           "#!/bin/bash -v\n",  
+            "yum update -y aws* \n", 
+            "yum install -y python-boto*\n" , 
+            "echo #!/bin/bash -v >> /tmp/configSetup.sh \n", 
+            "echo export ELB_NAME=", { "Ref" : "ElasticLoadBalancer"  },"  >> /tmp/configSetup.sh \n", 
+            "echo export AWS_REGION=", {"Ref" : "AWS::Region"  }, " >> /tmp/configSetup.sh \n", 
+            "echo export INSTANCE_ID=$(curl http://169.254.169.254/latest/meta-data/instance-id) >> /tmp/configSetup.sh \n",
+            "echo export KEY_NAME=", { "Ref" : "KeyName"  },"  >> /tmp/configSetup.sh \n", 
+            "echo export SEC_GROUP=", { "Ref" : "AlfrescoSecurityGroup"  },"  >> /tmp/configSetup.sh \n", 
+            "echo export INSTANCE_TYPE=", { "Ref" : "AlfrescoInstanceType"}," >> /tmp/configSetup.sh \n", 
+            "echo export AZLIST=", { "Ref" : "AZ1"},",",  {"Ref" : "AZ2"},"  >> /tmp/configSetup.sh \n", 
+            "echo export VPC_ZONE=",  { "Ref" : "AlfrescoSubnet" }, ","  , { "Ref" : "AlfrescoSubnet2" } , " >> /tmp/configSetup.sh \n",  
+            "echo export ROLE=",  { "Ref" : "AlfrescoRoleProfile" },  " >> /tmp/configSetup.sh \n",  
+            "cur=$(hostname  | sed 's/-/./g' | cut -c4-18)\n",
+            "cur1=$(hostname) \n",
+            "echo export CUR=\"$cur\" >> /tmp/configSetup.sh \n",
+            "echo export CUR1=\"$cur1\" >> /tmp/configSetup.sh \n",
+            "echo sed -i \"s/alfresco.ehcache.rmi.hostname=\"$CUR\"/ /g\" /opt/alfresco/tomcat/shared/classes/alfresco-global.properties >> /tmp/configSetup.sh \n",
+            "echo sed -i \"s/alfresco.jgroups.bind_address=\"$CUR\"/ /g\" /opt/alfresco/tomcat/shared/classes/alfresco-global.properties >> /tmp/configSetup.sh \n",
+            "echo sed -i \"s/$CUR1/ /g\" /etc/hosts \n",
+            "echo service alfresco stop  >> /tmp/configSetup.sh \n",  
+            "echo killall java >> /tmp/configSetup.sh \n",
+           	
+            "echo python /tmp/setupAS.py \\$ELB_NAME \\$AWS_REGION \\$INSTANCE_ID \\$KEY_NAME \\$SEC_GROUP \\$INSTANCE_TYPE \\$AZLIST \\$VPC_ZONE \\$ROLE>> /tmp/configSetup.sh \n", 
+            "chmod 700 /tmp/configSetup.sh \n",  
             "/opt/aws/bin/cfn-init -s ", { "Ref" : "AWS::StackName" }, 
-             " -r AlfrescoLC", 
-             " --role=", { "Ref" : "AlfrescoRole"  }, 
+             " -r AlfrescoInstance", 
+             " --role=", { "Ref" : "SetupRole"  }, 
              " --region ", { "Ref" : "AWS::Region" }, "\n",
             "/home/ec2-user/installAlf.sh\n",
             "mkdir /opt/alfresco/tomcat/webapps/WEB-INF\n",
@@ -438,18 +453,19 @@
             "/home/ec2-user/aws-publisher_install.sh\n",
             "echo product.code   AlfrescoEnterprise > /etc/aws-publisher/cw.conf\n",   
             "service aws-publisher stop \n",
-            "service aws-publisher start \n",    
             "service alfresco start\n",
-            "sleep 200\n",
+            "sleep 330\n",
+    		"/tmp/configSetup.sh\n",
              "curl -X PUT -H 'Content-Type:' --data-binary '{\"Status\" : \"SUCCESS\",",
                                                            "\"Reason\" : \"The application Alfresco Enterprise has been installed and started\",",
                                                            "\"UniqueId\" : \"AlfrescoEnterprise\",",
                                                            "\"Data\" : \"Done\"}' ",
                   "\"", {"Ref" : "WaitForAlfrescoInstallWaitHandle"},"\"\n"
+             
       
 
         ]]}},    
-        "SecurityGroups" : [ { "Ref" : "AlfrescoSecurityGroup" } ],
+      
         "InstanceType" : { "Ref" : "AlfrescoInstanceType" }
       },
         "Metadata" : {
@@ -485,7 +501,6 @@
                   "mkdir /mnt/alfresco/cache\n",   
                   "chown -R ec2-user:ec2-user /mnt/alfresco\n",
                   "mount /dev/sdh /mnt/alfresco/cache\n",
-				  
 				  "cd /home/ec2-user\n",
       			  "unzip /home/ec2-user/alfresco-s3-connector-1.0.0-5.zip\n",  
                   "/home/ec2-user/alfresco-enterprise-4.1.3-installer-linux-x64.bin --optionfile /home/ec2-user/option_file \n",
@@ -563,7 +578,11 @@
                               "group"  : "ec2-user"},
              "/home/ec2-user/hazelcast-ec2.xml" : { "source" : "https://s3.amazonaws.com/alfrescoInstaller/hazelcast-ec2.xml",  "mode"   : "000700",
                               "owner"  : "ec2-user",
-                              "group"  : "ec2-user"}  
+                              "group"  : "ec2-user"},
+			 "/tmp/setupAS.py" : { "source" : "https://s3.amazonaws.com/alfrescoInstaller/setupAS.py",  "mode"   : "000700",
+                              "owner"  : "root",
+                              "group"  : "root"}    
+                              
 
           }
         }
@@ -801,6 +820,7 @@
             "NetworkAclId" : { "Ref" : "RDSNetworkAcl" }
           }
         },
+         
         "RDSSubnetNetworkAclAssociation2" : {
           "Type" : "AWS::EC2::SubnetNetworkAclAssociation",
           "Properties" : {
@@ -868,7 +888,80 @@
 		            "Roles": [ { "Ref": "AlfrescoRole"} ]
 		         }  
       },  
-    
+    	   "SetupRole" : {
+      		"Type" : "AWS::IAM::Role",
+        	"Properties": {
+            	 "AssumeRolePolicyDocument": {
+		               "Statement": [ {
+		                  "Effect": "Allow",
+		                  "Principal": {
+		                     "Service": [ "ec2.amazonaws.com" ] },
+		                  	 "Action": [ "sts:AssumeRole" ]
+		               	} ]
+		            },
+           
+           		 "Path": "/",
+            	 "Policies": [ {
+               		"PolicyName": "AlfrescoSetup",
+               		"PolicyDocument": {
+	               		"Statement": [{
+			                  "Effect"   : "Allow",
+			                  "Action"   : "cloudformation:DescribeStackResource",
+			                  "Resource" : "*"
+			                },
+			                {
+			                  "Effect"   : "Allow",
+			                  "Action"   :[ "EC2:Describe*", "EC2:CreateImage", "ec2:TerminateInstances" ], 
+			                  "Resource" : "*"
+			                },
+                   			{
+			                  "Effect"   : "Allow",
+			                  "Action"   : "elasticloadbalancing:DescribeLoadBalancers", 
+			                  "Resource" : "*"
+			                },
+                   			 {
+			                  "Effect"   : "Allow",
+			                  "Action"   :[ "autoscaling:create*", "autoscaling:put*", "autoscaling:DescribePolicies"  ], 
+			                  "Resource" : "*"
+			                },
+                   			 {
+			                  "Effect"   : "Allow",
+			                  "Action"   : "iam:PassRole", 
+			                  "Resource" : {"Fn::GetAtt" : ["AlfrescoRole", "Arn"] }
+			                },
+                            {
+                			  "Effect"   : "Allow",
+           			          "Action"   : ["cloudwatch:PutMetricData","cloudwatch:EnableAlarmActions", "cloudwatch:PutMetricAlarm"  ],
+                  			  "Resource" : "*"
+                			},
+			                {
+			                  "Effect" : "Allow",
+			                  "Action" : [ "s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket", "s3:Get*","s3:List*"],
+			                  "Resource" : { "Fn::Join" : [ "", ["arn:aws:s3:::",  {"Ref" : "S3Bucket"}, "/*" ] ]}
+			
+			
+			                },
+			                {
+			                  "Effect" : "Allow",
+			                  "Action" : [ "s3:List*"],
+			                  "Resource" : "*"
+			                }
+                   			
+			                ]
+			              }
+                 }
+	                
+                 
+                  ]} 	
+      },  
+      
+      "SetupRoleProfile" : {
+      		"Type": "AWS::IAM::InstanceProfile",
+		         "Properties": {
+		            "Path": "/",
+		            "Roles": [ { "Ref": "SetupRole"} ]
+		         }  
+      },  
        "AlfrescoUser" : {
           "Type" : "AWS::IAM::User",
           "Properties" : {
@@ -892,7 +985,7 @@
                 },
                 {
                   "Effect" : "Allow",
-                  "Action" : [ "s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket", "s3:Get*", "s3:CreateBucket", "s3:List*"],
+                  "Action" : [ "s3:GetObject", "s3:PutObject", "s3:DeleteObject", "s3:ListBucket", "s3:Get*", "s3:List*"],
                   "Resource" : { "Fn::Join" : [ "", ["arn:aws:s3:::",  {"Ref" : "S3Bucket"}, "/*" ] ]}
 
 
