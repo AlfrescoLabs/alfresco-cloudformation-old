@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "This template will create a new VPC, and deploy an Alfresco cluster behind an ELB in 2 availabiltiy zones, the cluster will be configured to use an S3 bucket for storage, a local cache on ephemeral volumes, and an multi-AZ mySQL RDS instance will be used as the database. **This version only supports all AWS regions except GovCloud**",
+    "Description": "**Version 1.0 ** This template will create a new VPC, and deploy an Alfresco cluster behind an ELB in 2 availabiltiy zones, the cluster will be configured to use an S3 bucket for storage, a local cache on ephemeral volumes, and an multi-AZ mySQL RDS instance will be used as the database. **This version only supports all AWS regions except GovCloud**",
     
     "Parameters": {
         "KeyName": 
@@ -24,7 +24,7 @@
             "Type":"String",
             "Description" : "First availabiltiy zone to deploy into",
             "Default": "us-east-1a",
-            "AllowedValues" : ["eu-west-1a","eu-west-1b","eu-west-1c","us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-west-1a","us-west-1b","us-west-1c", "ap-southeast-1a","ap-southeast-1b","ap-northeast-1a","ap-northeast-1b","ap-northeast-1c","us-west-2a","us-west-2b","us-west-2c","sa-east-1a","sa-east-1b, ap2-southeast-1b, ap2-southeast-1a"],
+            "AllowedValues" : ["eu-west-1a","eu-west-1b","eu-west-1c","us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-west-1a","us-west-1b","ap-southeast-1a","ap-southeast-1b","ap-northeast-1a","ap-northeast-1b","ap-northeast-1c","us-west-2a","us-west-2b","us-west-2c","sa-east-1a","sa-east-1b, ap2-southeast-1b, ap2-southeast-1a"],
             "ConstraintDescription" : "Must be a valid EC2 Availabilty zone"            
         },
         
@@ -33,7 +33,7 @@
             "Type":"String",
             "Description" : "Second availabiltiy zone to deploy into",
             "Default": "us-east-1b",
-            "AllowedValues" : ["eu-west-1a","eu-west-1b","eu-west-1c","us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-west-1a","us-west-1b","us-west-1c","ap-southeast-1a","ap-southeast-1b","ap-northeast-1a","ap-northeast-1b","ap-northeast-1c","us-west-2a","us-west-2b","us-west-2c","sa-east-1a","sa-east-1b, ap2-southeast-1b, ap2-southeast-1a"],
+            "AllowedValues" : ["eu-west-1a","eu-west-1b","eu-west-1c","us-east-1a","us-east-1b","us-east-1c","us-east-1d","us-west-1a","us-west-1b","ap-southeast-1a","ap-southeast-1b","ap-northeast-1a","ap-northeast-1b","ap-northeast-1c","us-west-2a","us-west-2b","us-west-2c","sa-east-1a","sa-east-1b, ap2-southeast-1b, ap2-southeast-1a"],
             "ConstraintDescription" : "Must be a valid EC2 Availabilty zone"            
         },
        
