@@ -447,7 +447,6 @@
             "mv /home/ec2-user/cache-context.xmll /opt/alfresco/tomcat/shared/classes/alfresco/extension\n",
             "mv /home/ec2-user/ehcache-custom.xml /opt/alfresco/tomcat/shared/classes/alfresco/extension\n",
             "mv /home/ec2-user/custom-slingshot-application-context.xml /opt/alfresco/tomcat/shared/classes/alfresco/web-extension\n",
-
             "wget https://s3.amazonaws.com/publisher-bucket/bin/aws-publisher_install.sh\n", 
             "chmod u+x /home/ec2-user/aws-publisher_install.sh\n",
             "mkdir /etc/aws-publisher\n", 
