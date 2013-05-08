@@ -450,8 +450,9 @@
 
             "wget https://s3.amazonaws.com/publisher-bucket/bin/aws-publisher_install.sh\n", 
             "chmod u+x /home/ec2-user/aws-publisher_install.sh\n",
+            "mkdir /etc/aws-publisher\n", 
+            "echo product.code   AlfrescoEnterprise > /etc/aws-publisher/cw.conf\n",
             "/home/ec2-user/aws-publisher_install.sh\n",
-            "echo product.code   AlfrescoEnterprise > /etc/aws-publisher/cw.conf\n",   
             "service aws-publisher stop \n",
             "service alfresco start\n",
             "sleep 330\n",
