@@ -442,7 +442,6 @@
             "sed -i 's/@@AWS_SECRET_KEY@@/", {"Fn::GetAtt": ["CFNKeys", "SecretAccessKey"]}, "/g' custom-slingshot-application-context.xml\n", 
             "sed -i 's/@@AWS_REGION@@/", {"Ref" : "AWS::Region"},"/g' custom-slingshot-application-context.xml\n", 
             "sed -i 's/@@AWS_SECURITY_GROUP@@/",{ "Ref" : "AlfrescoSecurityGroup"} , "/g' custom-slingshot-application-context.xml\n", 
-           
             "mv /home/ec2-user/hazelcast-ec2.xml /opt/alfresco/tomcat/shared/classes/alfresco/extension\n",
             "mv /home/ec2-user/cache-context.xmll /opt/alfresco/tomcat/shared/classes/alfresco/extension\n",
             "mv /home/ec2-user/ehcache-custom.xml /opt/alfresco/tomcat/shared/classes/alfresco/extension\n",
