@@ -402,6 +402,7 @@
            "#!/bin/bash -v\n",  
             "yum update -y aws* \n", 
             "yum install -y python-boto*\n" , 
+            "easy_install -U boto\n",  
             "echo #!/bin/bash -v >> /tmp/configSetup.sh \n", 
             "echo export ELB_NAME=", { "Ref" : "ElasticLoadBalancer"  },"  >> /tmp/configSetup.sh \n", 
             "echo export AWS_REGION=", {"Ref" : "AWS::Region"  }, " >> /tmp/configSetup.sh \n", 
