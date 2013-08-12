@@ -517,7 +517,7 @@
            	      "echo index.reindexMissingContent.cronExpression=0 \"*\" \"*\" \"*\" \"*\" ? >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n", 
                   "echo alfresco.jgroups.bind_interface=eth0 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
                   "echo alfresco.jgroups.defaultProtocol=TCP >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
-                  "echo alfresco.tcp.initial_hosts=10.0.2.5[7800],10.0.2.6[7800],10.0.2.7[7800],10.0.2.8[7800],10.0.2.9[7800],10.0.2.10[7800],10.0.2.11[7800],10.0.2.12[7800],10.0.2.13[7800],10.0.2.14[7800],10.0.1.5[7800],10.0.1.6[7800],10.0.1.7[7800],10.0.1.8[7800],10.0.1.9[7800],10.0.1.10[7800],10.0.1.11[7800],10.0.1.12[7800],10.0.1.13[7800],10.0.1.14[7800] >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties \n",
+                  "echo alfresco.tcp.initial_hosts=10.0.2.4[7800],10.0.2.5[7800],10.0.2.6[7800],10.0.2.7[7800],10.0.2.8[7800],10.0.2.9[7800],10.0.2.10[7800],10.0.2.11[7800],10.0.2.12[7800],10.0.2.13[7800],10.0.2.14[7800],10.0.1.4[7800],10.0.1.5[7800],10.0.1.6[7800],10.0.1.7[7800],10.0.1.8[7800],10.0.1.9[7800],10.0.1.10[7800],10.0.1.11[7800],10.0.1.12[7800],10.0.1.13[7800],10.0.1.14[7800] >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties \n",
                   "echo dir.cachedcontent=/mnt/alfresco/cache >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
 				  "echo system.content.caching.cacheOnInbound=true >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",
    				  "echo system.content.caching.maxDeleteWatchCount=1 >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties\n",

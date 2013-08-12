@@ -27,4 +27,16 @@
          </hz:network>
       </hz:config>
    </hz:hazelcast>
+   <bean id="webframework.slingshot.persister.remote" class="org.alfresco.web.site.ClusterAwarePathStoreObjectPersister" parent="webframework.sitedata.persister.abstract">
+      <property name="store" ref="webframework.webapp.store.remote" />
+      <property name="pathPrefix"><value>alfresco/site-data/${objectTypeIds}</value></property>
+      <property name="hazelcastInstance" ref="webframework.cluster.slingshot" />
+      <property name="hazelcastTopicName"><value>slingshot-topic</value></property>
+   </bean>
+   
+   <bean id="webframework.factory.requestcontext.servlet" class="org.alfresco.web.site.ClusterAwareRequestContextFactory" parent="webframework.factory.base">
+      <property name="linkBuilderFactory" ref="webframework.factory.linkbuilder.servlet" />
+      <property name="extensibilityModuleHandler" ref="webscripts.extensibility.handler" />
+      <property name="clusterObjectPersister" ref="webframework.slingshot.persister.remote" />
+   </bean>
 </beans>
