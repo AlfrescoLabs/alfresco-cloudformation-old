@@ -87,14 +87,14 @@
     },
    "Mappings" : {
     "ALINUXAMI" : {
-      "us-east-1"      : { "AMI" : "ami-3275ee5b" },
-      "us-west-2"      : { "AMI" : "ami-ecbe2adc" },
-      "us-west-1"      : { "AMI" : "ami-66d1fc23" },
-      "eu-west-1"      : { "AMI" : "ami-44939930" },
-      "ap-southeast-1" : { "AMI" : "ami-aa9ed2f8" },
-      "ap-southeast-2" : { "AMI" : "ami-363eaf0c" },
-      "ap-northeast-1" : { "AMI" : "ami-173fbf16" },
-      "sa-east-1"      : { "AMI" : "ami-dd6bb0c0" }
+      "us-east-1"      : { "AMI" : "ami-35792c5c" },
+      "us-west-2"      : { "AMI" : "ami-d03ea1e0" },
+      "us-west-1"      : { "AMI" : "ami-687b4f2d" },
+      "eu-west-1"      : { "AMI" : "ami-149f7863" },
+      "ap-southeast-1" : { "AMI" : "ami-14f2b946" },
+      "ap-southeast-2" : { "AMI" : "ami-a148d59b" },
+      "ap-northeast-1" : { "AMI" : "ami-3561fe34" },
+      "sa-east-1"      : { "AMI" : "ami-9f6ec982" }
     },
 
 
@@ -370,7 +370,7 @@
             "DependsOn" : "AlfrescoInstance",
             "Properties" : {
               "Handle" : {"Ref" : "WaitForAlfrescoInstallWaitHandle"},
-              "Timeout" : "1700"
+              "Timeout" : "2000"
             }
           },
        "WaitForAlfrescoInstallWaitHandle" :
@@ -503,7 +503,7 @@
                   "mount /dev/sdh /mnt/alfresco/cache\n",
 				  "cd /home/ec2-user\n",
       			  "unzip /home/ec2-user/alfresco-s3-connector-1.0.0-5.zip\n",  
-                  "/home/ec2-user/alfresco-enterprise-4.1.3-installer-linux-x64.bin --optionfile /home/ec2-user/option_file \n",
+                  "/home/ec2-user/alfresco-enterprise-4.1.6-installer-linux-x64.bin --optionfile /home/ec2-user/option_file \n",
                   "cp /home/ec2-user/alfresco-s3-connector-1.0.0-5.amp /opt/alfresco/amps \n",
                   "cp /home/ec2-user/mysql-connector-java-5.1.22-bin.jar /opt/alfresco/tomcat/lib \n",
                   "sed -i 's/read RESP/ /g' /opt/alfresco/bin/apply_amps.sh \n",
@@ -555,7 +555,7 @@
                               "owner"  : "ec2-user",
                               "group"  : "ec2-user"
             },
-              "/home/ec2-user/alfresco-enterprise-4.1.3-installer-linux-x64.bin" : { "source" : "http://eu.dl.alfresco.com/release/enterprise/4.1/build-00097/alfresco-enterprise-4.1.3-installer-linux-x64.bin",  "mode"   : "000700",
+              "/home/ec2-user/alfresco-enterprise-4.1.6-installer-linux-x64.bin" : { "source" : "http://eu.dl.alfresco.com/release/enterprise/4.1/4.1.6-build-059/alfresco-enterprise-4.1.6-installer-linux-x64.bin",  "mode"   : "000700",
                               "owner"  : "ec2-user",
                               "group"  : "ec2-user" },
               "/home/ec2-user/alfresco-s3-connector-1.0.0-5.zip" : { "source" : "http://eu.dl.alfresco.com/release/enterprise/4.1/build-00097/alfresco-s3-connector-1.0.0-5.zip",  "mode"   : "000700",

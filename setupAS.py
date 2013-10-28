@@ -12,6 +12,8 @@ from boto.ec2.autoscale import AutoScalingGroup
 from boto.ec2.autoscale import ScalingPolicy
 from boto.ec2.autoscale import Tag
 from boto.ec2.cloudwatch import MetricAlarm
+from boto.ec2.blockdevicemapping import BlockDeviceType
+from boto.ec2.blockdevicemapping import BlockDeviceMapping
 
 #logging.basicConfig(filename='/tmp/setupAS.log',filemode='w',level=logging.DEBUG)
 # Get values from cmd line
@@ -40,13 +42,14 @@ logging.debug( ' AMIID=%s', AMIID)
 time.sleep(20)
 
 #setup ephemeral0 for local cache
-blockDeviceMap = []
-blockDeviceMap.append( {'DeviceName':'/dev/sdh', 'VirtualName' : 'ephemeral0'})
-
+blockDeviceMap = boto.ec2.blockdevicemapping.BlockDeviceType()
+blockDeviceMap.ephemeral_name = 'ephemeral0'
+bdm = BlockDeviceMapping()
+bdm['/dev/sdh'] = blockDeviceMap
 #create user-data string
 userData = '#!/bin/bash \n cur=$(hostname  | sed \'s/-/./g\' | cut -c4-18) \n echo \"alfresco.jgroups.bind_address=$cur\"   >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties \n echo \"alfresco.ehcache.rmi.hostname=$cur\"  >> /opt/alfresco/tomcat/shared/classes/alfresco-global.properties \n cur1=$(hostname)\n echo \"$cur $cur1\" >> /etc/hosts\n'
 #create launch configuration and AS group
-launchConfig = LaunchConfiguration(name=asLCstr, image_id=AMIID, key_name=KEY, security_groups=[SECGRP], instance_type=TYPE, instance_monitoring=True, instance_profile_name=ROLE, block_device_mappings=blockDeviceMap, user_data=userData)
+launchConfig = LaunchConfiguration(name=asLCstr, image_id=AMIID, key_name=KEY, security_groups=[SECGRP], instance_type=TYPE, instance_monitoring=True, instance_profile_name=ROLE, block_device_mappings=[bdm], user_data=userData)
 conn_as.create_launch_configuration(launchConfig)
 time.sleep(20)
 autoscaleGroup = AutoScalingGroup(group_name=asGrpStr , load_balancers=[ELB_NAME], availabilty_zones=[AZLIST], launch_config=launchConfig, vpc_zone_identifier=VPC_ZONE, min_size=2, max_size=6, health_check_period='360', health_check_type='ELB')
@@ -61,8 +64,8 @@ as_tag = Tag(key='Name', value = 'Alfresco Server', propagate_at_launch=True, re
 conn_as.create_or_update_tags([as_tag])
 
 #create scale up and scale down policies for the autoscale group
-scaleUpPolicy = ScalingPolicy(name='alfrescoScaleUp-'+randomStr, adjustment_type='ChangeInCapacity', as_name=autoscaleGroup.name, scaling_adjustment=2, cooldown=1200)
-scaleDownPolicy = ScalingPolicy(name='alfrescoScaleDown-'+randomStr, adjustment_type='ChangeInCapacity', as_name=autoscaleGroup.name, scaling_adjustment=-1, cooldown=600) 
+scaleUpPolicy = ScalingPolicy(name='alfrescoScaleUp-'+randomStr, adjustment_type='ChangeInCapacity', as_name=autoscaleGroup.name, scaling_adjustment=2, cooldown=400)
+scaleDownPolicy = ScalingPolicy(name='alfrescoScaleDown-'+randomStr, adjustment_type='ChangeInCapacity', as_name=autoscaleGroup.name, scaling_adjustment=-1, cooldown=400) 
 conn_as.create_scaling_policy(scaleUpPolicy)
 conn_as.create_scaling_policy(scaleDownPolicy)
 
