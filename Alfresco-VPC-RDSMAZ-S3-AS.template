@@ -370,7 +370,7 @@
             "DependsOn" : "AlfrescoInstance",
             "Properties" : {
               "Handle" : {"Ref" : "WaitForAlfrescoInstallWaitHandle"},
-              "Timeout" : "2000"
+              "Timeout" : "2600"
             }
           },
        "WaitForAlfrescoInstallWaitHandle" :
