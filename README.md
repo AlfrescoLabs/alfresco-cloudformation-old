@@ -1,7 +1,7 @@
-Alfresco CloudFormation Template
+Alfresco CloudFormation Template New Template here https://github.com/Alfresco/alfresco-cloudformation-chef
 ================================
 
-*WATCH OUT!* A new version of this template for Alfresco One 5.0 is available here https://github.com/Alfresco/alfresco-cloudformation-chef Please, referer to the link above for newer code and resources.
+**WATCH OUT!** ***A new version of this template for Alfresco One 5.0 is available here https://github.com/Alfresco/alfresco-cloudformation-chef Please, referer to the link above for newer code and resources.***
 
 *Disclaimer:* This CloudFormation template is still in early development and should be considered for illustrative/educational purposes only. No warranty is expressed or implied. Improvements and any other contributions are encouraged and appreciated.
 
